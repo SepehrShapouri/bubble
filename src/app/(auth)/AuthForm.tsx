@@ -2,21 +2,23 @@
 import CustomInput from "@/components/CustomInput";
 import { Button } from "@/components/ui/button";
 import { Form, FormMessage } from "@/components/ui/form";
+import { loginSchema, signupSchema } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { login, signUp } from "./actions";
-import { loginSchema, signupSchema } from "@/lib/validation";
 type AuthFormTypes = { formType: "signup" | "login" };
 function AuthForm({ formType }: AuthFormTypes) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const passwordtype: "text" | "password" = showPassword ? "text" : "password";
   const schema = formType == "login" ? loginSchema : signupSchema;
+  const authenticate = formType == "login" ? login : signUp;
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -25,20 +27,10 @@ function AuthForm({ formType }: AuthFormTypes) {
     },
   });
   async function onSubmit(values: z.infer<typeof schema>) {
-    setIsLoading(true);
-    if (formType == "login") {
-      const { error } = await login(values);
-      if (error) {
-        setError(error);
-      }
-    } else {
-      const { error } = await signUp(values);
-      if (error) {
-        setError(error);
-      }
-    }
-
-    setIsLoading(false);
+    startTransition(async () => {
+      const { error } = await authenticate(values);
+      if (error) setError(error);
+    });
   }
 
   return (
@@ -96,9 +88,9 @@ function AuthForm({ formType }: AuthFormTypes) {
                 <Button
                   type="submit"
                   className="mt-4 w-full"
-                  isLoading={isLoading}
+                  isLoading={isPending}
                   loadingText="submitting"
-                  disabled={isLoading}
+                  disabled={isPending}
                 >
                   {formType == "login" ? "Login" : "Create account"}
                 </Button>
@@ -110,7 +102,7 @@ function AuthForm({ formType }: AuthFormTypes) {
               </form>
             </Form>
           </div>
-          <div className="mt-4 text-center text-sm">
+          <div className="mt-2 text-center text-sm">
             {formType == "login"
               ? "Don't have an account?"
               : "Already have an account?"}{" "}
@@ -129,7 +121,7 @@ function AuthForm({ formType }: AuthFormTypes) {
           alt="Image"
           width={2000}
           height={2000}
-          className="m-auto object-cover dark:brightness-[0.2] dark:grayscale"
+          className="m-auto object-cover "
         />
       </div>
     </div>

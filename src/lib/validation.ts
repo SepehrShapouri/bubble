@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { z } from "zod";
 const requiredString = z.string().trim().min(1, "Required");
 export const signupSchema = z.object({
@@ -8,6 +9,7 @@ export const signupSchema = z.object({
   ),
   password: requiredString.min(8, "Password must be atleast 8 characters"),
 });
+
 export type signupSchemaValues = z.infer<typeof signupSchema>;
 
 export const loginSchema = z.object({

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "../globals.css";
+import { validateRequest } from "@/auth";
+import { redirect } from "next/navigation";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -19,11 +21,13 @@ export const metadata: Metadata = {
   description: "Your daily go to social network",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const {user} = await validateRequest()
+  if(user) redirect("/")
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>

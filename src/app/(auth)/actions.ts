@@ -20,6 +20,7 @@ async function createUserSession(userId: string) {
     sessionCookie.attributes,
   );
 }
+
 export async function signUp(
   credentials: authSchemaValues,
 ): Promise<{ error: string }> {
@@ -39,7 +40,6 @@ export async function signUp(
     const existingUsername = await db.user.findFirst({
       where: { username: { equals: username, mode: "insensitive" } },
     });
-
     if (existingUsername) {
       return {
         error:
