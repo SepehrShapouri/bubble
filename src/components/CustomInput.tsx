@@ -1,9 +1,10 @@
-import React, { InputHTMLAttributes } from "react";
+import React, { Dispatch, InputHTMLAttributes, SetStateAction } from "react";
 import { FormControl, FormField, FormLabel, FormMessage } from "./ui/form";
 import { Input } from "./ui/input";
 import { Control, FieldPath, FieldValue, Form } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
+import { Eye, EyeOff } from "lucide-react";
 type CustomInputTypes = {
   control: FieldValue<any>;
   label: string;
@@ -21,6 +22,8 @@ type CustomInputTypes = {
     | "decimal"
     | undefined;
   className?: string;
+  showPassword?:boolean,
+  setShowPassword?: Dispatch<SetStateAction<boolean>>
 };
 function CustomInput({
   control,
@@ -30,6 +33,8 @@ function CustomInput({
   type = "text",
   inputmode = "text",
   className = "",
+  showPassword = false,
+  setShowPassword 
 }: CustomInputTypes) {
   return (
     <FormField
@@ -40,7 +45,7 @@ function CustomInput({
           <FormLabel className="text-14 w-full max-w-[280px] font-medium">
             {label}
           </FormLabel>
-          <div className="flex w-full flex-col">
+          <div className="relative flex w-full flex-col">
             <FormControl>
               <Input
                 placeholder={placeholder}
@@ -53,8 +58,21 @@ function CustomInput({
                 inputMode={inputmode}
               />
             </FormControl>
-            <FormMessage className="mt-2 text-xs text-red-500" />
+            {showPassword && setShowPassword && (
+              <button
+                type="button"
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+                onClick={()=>setShowPassword(!showPassword)}
+              >
+                {!showPassword ? (
+                  <Eye className="h-4 w-4 text-gray-500" />
+                ) : (
+                  <EyeOff className="h-4 w-4 text-gray-500" />
+                )}
+              </button>
+            )}
           </div>
+          <FormMessage className="mt-2  text-xs text-red-500" />
         </div>
       )}
     />

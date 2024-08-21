@@ -1,44 +1,62 @@
 "use client";
 import CustomInput from "@/components/CustomInput";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { authSchema } from "@/lib/validation";
+import { Form, FormMessage } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { login, signUp } from "./actions";
-type AuthFormTypes = {
-  formType: "signup" | "login";
-};
+import { loginSchema, signupSchema } from "@/lib/validation";
+type AuthFormTypes = { formType: "signup" | "login" };
 function AuthForm({ formType }: AuthFormTypes) {
-  const form = useForm<z.infer<typeof authSchema>>({
-    resolver: zodResolver(authSchema),
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const passwordtype: "text" | "password" = showPassword ? "text" : "password";
+  const schema = formType == "login" ? loginSchema : signupSchema;
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: {
-      email: "",
       username: "",
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof authSchema>) {
-    if(formType == 'login'){
-        login(values)
+  async function onSubmit(values: z.infer<typeof schema>) {
+    setIsLoading(true);
+    if (formType == "login") {
+      const { error } = await login(values);
+      if (error) {
+        setError(error);
+      }
+    } else {
+      const { error } = await signUp(values);
+      if (error) {
+        setError(error);
+      }
     }
-    else{
-        signUp(values)
-    }
+
+    setIsLoading(false);
   }
+
   return (
     <div className="w-full lg:grid lg:max-h-[600px] lg:grid-cols-2 xl:max-h-[800px]">
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">
-              {formType == "login" ? "Login" : "Create an account"}
-            </h1>
+            <div className="flex w-full items-center justify-center">
+              <Image
+                src="/bubble-logo.png"
+                width={72}
+                height={52}
+                alt="bubble logo"
+              />
+              <h1 className="mr-10 text-3xl font-bold">
+                {formType == "login" ? "Login" : "Register"}
+              </h1>
+            </div>
             <p className="text-balance text-muted-foreground">
               {formType == "login"
                 ? "Enter your email below to login to bubble"
@@ -70,15 +88,25 @@ function AuthForm({ formType }: AuthFormTypes) {
                   placeholder="StrongPassHehe***"
                   name="password"
                   label="Password"
+                  showPassword={showPassword}
+                  setShowPassword={setShowPassword}
+                  type={passwordtype}
                 />
-                            <Button type="submit" className="w-full mt-4">
-              {formType == "login" ? "Login" : "Create account"}
-            </Button>
-            <Button variant="outline" className="w-full">
-              {formType == "login"
-                ? "Login with Google"
-                : "Sign up with Google"}
-            </Button>
+                {error && <FormMessage>{error}</FormMessage>}
+                <Button
+                  type="submit"
+                  className="mt-4 w-full"
+                  isLoading={isLoading}
+                  loadingText="submitting"
+                  disabled={isLoading}
+                >
+                  {formType == "login" ? "Login" : "Create account"}
+                </Button>
+                <Button variant="outline" className="w-full">
+                  {formType == "login"
+                    ? "Login with Google"
+                    : "Sign up with Google"}
+                </Button>
               </form>
             </Form>
           </div>

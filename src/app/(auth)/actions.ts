@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { authSchema, AuthSchemaValues } from "../../lib/validation";
+import { authSchemaValues, loginSchema, signupSchema } from "../../lib/validation";
 import { hash, verify } from "@node-rs/argon2";
 import { generateIdFromEntropySize, Session } from "lucia";
 import { lucia, validateRequest } from "@/auth";
@@ -21,11 +21,11 @@ async function createUserSession(userId: string) {
   );
 }
 export async function signUp(
-  credentials: AuthSchemaValues,
+  credentials: authSchemaValues,
 ): Promise<{ error: string }> {
   console.log(credentials);
   try {
-    const { email, username, password } = authSchema.parse(credentials);
+    const { email, username, password } = signupSchema.parse(credentials);
 
     const password_hash = await hash(password, {
       memoryCost: 19456,
@@ -52,6 +52,7 @@ export async function signUp(
     console.log("no existing email");
 
     if (existingEmail) {
+        console.log('existing email')
       return { error: "The email address has already been picked." };
     }
     console.log("no existing user");
@@ -85,15 +86,16 @@ export async function signUp(
 }
 
 export async function login(
-  credentials: AuthSchemaValues,
+  credentials: authSchemaValues,
 ): Promise<{ error: string }> {
+    console.log(credentials,'login')
   try {
-    const { username, password } = authSchema.parse(credentials);
+    const { username, password } = loginSchema.parse(credentials);
 
     const existingUser = await db.user.findFirst({
       where: { username: { equals: username, mode: "insensitive" } },
     });
-
+    console.log(existingUser,'user')
     if (!existingUser || !existingUser.password_hash) {
       return { error: "Incorrect username or password" };
     }
@@ -107,8 +109,9 @@ export async function login(
     if (!validPassword) {
       return { error: "Incorrect username or password" };
     }
-
+    console.log('validated pass')
     await createUserSession(existingUser.id);
+    console.log('created session')
     return redirect("/");
   } catch (error) {
     if (isRedirectError(error)) throw error;
