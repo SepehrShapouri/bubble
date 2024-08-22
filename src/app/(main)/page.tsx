@@ -3,6 +3,7 @@ import Image from "next/image";
 import Post from "@/components/posts/Post";
 import TrendsSidebar from "@/components/main/TrendsSidebar";
 import { getPosts } from "@/components/main/actions";
+import ForYouFeed from "./ForYouFeed";
 
 export default async function Home() {
   const posts = await getPosts();
@@ -13,6 +14,7 @@ export default async function Home() {
         {posts.map((post) => {
           return <Post post={post} key={post.id} />;
         })}
+        <ForYouFeed/>
       </div>
       <TrendsSidebar/>
     </div>
