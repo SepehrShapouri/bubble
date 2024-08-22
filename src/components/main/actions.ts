@@ -1,15 +1,26 @@
 "use server";
 import { validateRequest } from "@/auth";
 import { db } from "@/lib/db";
-import { postDataInclude, userDataSelect } from "@/lib/types";
+import { postDataInclude, PostsPage, userDataSelect } from "@/lib/types";
+import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
-export async function getPosts() {
+export async function getPosts(cursor: string ) {
+  console.log(cursor,'cursor')
+  const pageNumber = 10;
   const posts = await db.post.findMany({
     orderBy: { createdAt: "desc" },
     include: postDataInclude,
+    take: pageNumber + 1,
+    cursor: cursor ? { id: cursor } : undefined,
   });
-  return posts;
+
+  const nextCursor = posts.length > pageNumber ? posts[pageNumber].id : null;
+  const data: PostsPage = {
+    posts: posts.slice(0, pageNumber),
+    nextCursor,
+  };
+  return data;
 }
 
 export async function getUsersToFollow() {
