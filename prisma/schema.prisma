@@ -15,10 +15,11 @@ model User {
   password_hash String?
   email         String?   @unique
   displayName   String
-  sessions       Session[]
+  sessions      Session[]
   googleId      String?   @unique
   avatarUrl     String?
   bio           String?
+  posts         Post[]
 
   createdAt DateTime @default(now())
 
@@ -29,6 +30,15 @@ model Session {
   id        String   @id
   userId    String
   expiresAt DateTime
-  user      User     @relation(fields: [userId], references: [id],onDelete: Cascade)
-@@map("sessions")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
