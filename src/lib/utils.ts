@@ -12,8 +12,15 @@ export function formatRelativeDate(from: Date) {
   } else {
     if (currentDate.getFullYear() === from.getFullYear()) {
       return formatDate(from, "MMM d");
-    }else {
-      return formatDate(from,"MMM d, yyyy")
+    } else {
+      return formatDate(from, "MMM d, yyyy");
     }
   }
+}
+
+export function formatNumber(number: number): string {
+  return Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(number)
 }
