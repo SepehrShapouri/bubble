@@ -5,14 +5,15 @@ import { Button } from "../ui/button";
 import { getTrendingTopics, getUsersToFollow } from "./actions";
 import UserAvatar from "./UserAvatar";
 import { formatNumber } from "@/lib/utils";
+import { Skeleton } from "../ui/skeleton";
 
 function TrendsSidebar() {
   return (
     <div className="sticky top-[5.25rem] hidden h-fit w-72 flex-none space-y-5 md:block lg:w-80">
-      <Suspense fallback={<Loader2 className="animate-spin" />}>
+      <Suspense fallback={<WhoToFollowSkeleton />}>
         <WhoToFollow />
       </Suspense>
-      <Suspense fallback={<Loader2 className="animate-spin" />}>
+      <Suspense>
         <TrendingTopics />
       </Suspense>
     </div>
@@ -51,7 +52,7 @@ async function WhoToFollow() {
                 </p>
               </div>
             </Link>
-            <Button>Follow</Button>
+            <Button size="sm">Follow</Button>
           </div>
         );
       })}
@@ -61,13 +62,13 @@ async function WhoToFollow() {
 
 async function TrendingTopics() {
   const trendingTopics = await getTrendingTopics();
-console.log(trendingTopics)
+  console.log(trendingTopics);
   return (
     <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm">
       <div className="text-xl font-bold">Trending Topics</div>
       {trendingTopics.map(({ hashtag, count }) => {
         const title = hashtag.split("#")[1];
-        console.log(title,"hs")
+        console.log(title, "hs");
         return (
           <Link key={title} href={`/hashtag/${title}`} className="block">
             <p
@@ -77,12 +78,49 @@ console.log(trendingTopics)
               {hashtag}
             </p>
             <p className="text-sm text-muted-foreground">
-              {formatNumber(count)}{" "}
-              {count === 1 ? "post" : "posts"}
+              {formatNumber(count)} {count === 1 ? "post" : "posts"}
             </p>
           </Link>
         );
       })}
+    </div>
+  );
+}
+
+function WhoToFollowSkeleton() {
+  return (
+    <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm">
+      <div className="text-xl font-bold">Who to follow</div>
+      <div className="flex flex-wrap gap-3 items-center justify-between">
+        <div className="flex gap-3 items-center">
+        <Skeleton className="size-12 rounded-full" />
+        <div className="space-y-1.5">
+          <Skeleton className="h-4 w-24 rounded" />
+          <Skeleton className="h-4 w-20 rounded" />
+        </div>
+        </div>
+        <Skeleton className="w-[66px] h-[36px] animate-pulse rounded-md"/>
+      </div>
+      <div className="flex flex-wrap gap-3 items-center justify-between">
+        <div className="flex gap-3 items-center">
+        <Skeleton className="size-12 rounded-full" />
+        <div className="space-y-1.5">
+          <Skeleton className="h-4 w-24 rounded" />
+          <Skeleton className="h-4 w-20 rounded" />
+        </div>
+        </div>
+        <Skeleton className="w-[66px] h-[36px] animate-pulse rounded-md"/>
+      </div>
+      <div className="flex flex-wrap gap-3 items-center justify-between">
+        <div className="flex gap-3 items-center">
+        <Skeleton className="size-12 rounded-full" />
+        <div className="space-y-1.5">
+          <Skeleton className="h-4 w-24 rounded" />
+          <Skeleton className="h-4 w-20 rounded" />
+        </div>
+        </div>
+        <Skeleton className="w-[66px] h-[36px] animate-pulse rounded-md"/>
+      </div>
     </div>
   );
 }

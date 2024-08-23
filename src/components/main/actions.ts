@@ -33,7 +33,7 @@ export async function getUsersToFollow() {
       },
     },
     select: userDataSelect,
-    take: 5,
+    take: 3,
   });
   return usersToFollow;
 }

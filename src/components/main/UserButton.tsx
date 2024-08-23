@@ -36,7 +36,7 @@ type UserButtonProps = {
 function UserButton({ className }: UserButtonProps) {
   const { session, user } = useSession();
   const { theme, setTheme } = useTheme();
-  const { clear:clearCache} = useQueryClient();
+  const querClient = useQueryClient();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -85,7 +85,7 @@ function UserButton({ className }: UserButtonProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            clearCache();
+            querClient.clear()
             logout();
           }}
         >
