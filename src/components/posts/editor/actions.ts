@@ -2,7 +2,7 @@
 
 import { validateRequest } from "@/auth";
 import { db } from "@/lib/db";
-import { postDataInclude } from "@/lib/types";
+import { getPostDataInclude } from "@/lib/types";
 import { createPostSchema } from "@/lib/validation";
 
 export async function submitPost(input: string) {
@@ -11,6 +11,9 @@ export async function submitPost(input: string) {
 
   const { content } = createPostSchema.parse({ content: input });
 
-  const newPost = await db.post.create({ data: { content, userId: user.id } ,include:postDataInclude});
-  return newPost
+  const newPost = await db.post.create({
+    data: { content, userId: user.id },
+    include: getPostDataInclude(user.id),
+  });
+  return newPost;
 }

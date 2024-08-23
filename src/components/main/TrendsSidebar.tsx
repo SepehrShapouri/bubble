@@ -6,6 +6,7 @@ import { getTrendingTopics, getUsersToFollow } from "./actions";
 import UserAvatar from "./UserAvatar";
 import { formatNumber } from "@/lib/utils";
 import { Skeleton } from "../ui/skeleton";
+import FollowButton from "../FollowButton";
 
 function TrendsSidebar() {
   return (
@@ -52,7 +53,15 @@ async function WhoToFollow() {
                 </p>
               </div>
             </Link>
-            <Button size="sm">Follow</Button>
+            <FollowButton
+              userId={user.id}
+              initialState={{
+                followers: user._count.Followers,
+                isFollowedByUser: user.Followers.some(
+                  ({ followerId }) => followerId == user.id,
+                ),
+              }}
+            />
           </div>
         );
       })}
@@ -91,35 +100,35 @@ function WhoToFollowSkeleton() {
   return (
     <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm">
       <div className="text-xl font-bold">Who to follow</div>
-      <div className="flex flex-wrap gap-3 items-center justify-between">
-        <div className="flex gap-3 items-center">
-        <Skeleton className="size-12 rounded-full" />
-        <div className="space-y-1.5">
-          <Skeleton className="h-4 w-24 rounded" />
-          <Skeleton className="h-4 w-20 rounded" />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Skeleton className="size-12 rounded-full" />
+          <div className="space-y-1.5">
+            <Skeleton className="h-4 w-24 rounded" />
+            <Skeleton className="h-4 w-20 rounded" />
+          </div>
         </div>
-        </div>
-        <Skeleton className="w-[66px] h-[36px] animate-pulse rounded-md"/>
+        <Skeleton className="h-[36px] w-[66px] animate-pulse rounded-md" />
       </div>
-      <div className="flex flex-wrap gap-3 items-center justify-between">
-        <div className="flex gap-3 items-center">
-        <Skeleton className="size-12 rounded-full" />
-        <div className="space-y-1.5">
-          <Skeleton className="h-4 w-24 rounded" />
-          <Skeleton className="h-4 w-20 rounded" />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Skeleton className="size-12 rounded-full" />
+          <div className="space-y-1.5">
+            <Skeleton className="h-4 w-24 rounded" />
+            <Skeleton className="h-4 w-20 rounded" />
+          </div>
         </div>
-        </div>
-        <Skeleton className="w-[66px] h-[36px] animate-pulse rounded-md"/>
+        <Skeleton className="h-[36px] w-[66px] animate-pulse rounded-md" />
       </div>
-      <div className="flex flex-wrap gap-3 items-center justify-between">
-        <div className="flex gap-3 items-center">
-        <Skeleton className="size-12 rounded-full" />
-        <div className="space-y-1.5">
-          <Skeleton className="h-4 w-24 rounded" />
-          <Skeleton className="h-4 w-20 rounded" />
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Skeleton className="size-12 rounded-full" />
+          <div className="space-y-1.5">
+            <Skeleton className="h-4 w-24 rounded" />
+            <Skeleton className="h-4 w-20 rounded" />
+          </div>
         </div>
-        </div>
-        <Skeleton className="w-[66px] h-[36px] animate-pulse rounded-md"/>
+        <Skeleton className="h-[36px] w-[66px] animate-pulse rounded-md" />
       </div>
     </div>
   );

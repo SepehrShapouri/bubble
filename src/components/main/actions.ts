@@ -1,16 +1,17 @@
 "use server";
 import { validateRequest } from "@/auth";
 import { db } from "@/lib/db";
-import { postDataInclude, PostsPage, userDataSelect } from "@/lib/types";
+import { getPostDataInclude, getUserDataSelect, PostsPage } from "@/lib/types";
 import { Prisma } from "@prisma/client";
 import { unstable_cache } from "next/cache";
 
-export async function getPosts(cursor: string ) {
-  console.log(cursor,'cursor')
+export async function getPosts(cursor: string) {
+  const { user } = await validateRequest();
+  if (!user) throw Error("Unauthorized");
   const pageNumber = 10;
   const posts = await db.post.findMany({
     orderBy: { createdAt: "desc" },
-    include: postDataInclude,
+    include: getPostDataInclude(user.id),
     take: pageNumber + 1,
     cursor: cursor ? { id: cursor } : undefined,
   });
@@ -31,8 +32,13 @@ export async function getUsersToFollow() {
       NOT: {
         id: user.id,
       },
+      Followers: {
+        none: {
+          followerId: user.id,
+        },
+      },
     },
-    select: userDataSelect,
+    select: getUserDataSelect(user.id),
     take: 3,
   });
   return usersToFollow;

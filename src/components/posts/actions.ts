@@ -2,7 +2,7 @@
 
 import { validateRequest } from "@/auth";
 import { db } from "@/lib/db";
-import { postDataInclude } from "@/lib/types";
+import { getPostDataInclude } from "@/lib/types";
 
 export async function deletePost(id: string) {
   const { user } = await validateRequest();
@@ -15,6 +15,6 @@ export async function deletePost(id: string) {
 
   if (postToDelete.userId !== user.id) throw Error("Unauthorized");
 
-const deletedPost =  await db.post.delete({ where: { id } ,include:postDataInclude});
+const deletedPost =  await db.post.delete({ where: { id } ,include:getPostDataInclude(user.id)});
  return deletedPost
 }
