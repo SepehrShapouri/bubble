@@ -23,6 +23,33 @@ export async function getPosts(cursor: string) {
   };
   return data;
 }
+export async function getFollowingPosts(cursor: string) {
+  const { user } = await validateRequest();
+  if (!user) throw Error("Unauthorized");
+  const pageNumber = 10;
+  const posts = await db.post.findMany({
+    orderBy: { createdAt: "desc" },
+    where: {
+      user: {
+        Followers: {
+          some: {
+            followerId: user.id,
+          },
+        },
+      },
+    },
+    include: getPostDataInclude(user.id),
+    take: pageNumber + 1,
+    cursor: cursor ? { id: cursor } : undefined,
+  });
+
+  const nextCursor = posts.length > pageNumber ? posts[pageNumber].id : null;
+  const data: PostsPage = {
+    posts: posts.slice(0, pageNumber),
+    nextCursor,
+  };
+  return data;
+}
 
 export async function getUsersToFollow() {
   const { user } = await validateRequest();
