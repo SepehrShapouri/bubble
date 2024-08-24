@@ -12,7 +12,7 @@ import { useSession } from "@/components/providers/SessionProvider";
 export function useSubmitPost() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const { user } = useSession();
+  const {user} = useSession()
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["submit-post"],
@@ -22,7 +22,7 @@ export function useSubmitPost() {
         queryKey: ["post-feed"],
         predicate(query) {
           return (
-            query.queryKey.includes("for-you") ||
+            query.queryKey.includes("for-you-feed") ||
             (query.queryKey.includes("user-posts") &&
               query.queryKey.includes(user.id))
           );
@@ -52,7 +52,7 @@ export function useSubmitPost() {
       queryClient.invalidateQueries({
         queryKey: queryFilter.queryKey,
         predicate(query) {
-          return queryFilter.predicate(query) && !query.state.data;
+          return queryFilter.predicate(query) &&  !query.state.data;
         },
       });
       toast({ description: "Added new post" });
