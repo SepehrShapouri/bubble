@@ -2,7 +2,8 @@
 
 import { validateRequest } from "@/auth";
 import { db } from "@/lib/db";
-import { getPostDataInclude, PostsPage } from "@/lib/types";
+import { getPostDataInclude, getUserDataSelect, PostsPage } from "@/lib/types";
+import { cache } from "react";
 
 export async function getUsersPost(userId: string, cursor: string) {
   console.log(userId);
@@ -24,3 +25,18 @@ export async function getUsersPost(userId: string, cursor: string) {
   };
   return data;
 }
+
+export const getUser = cache(async (username: string) => {
+  const { user: loggedInUser } = await validateRequest();
+  if (!loggedInUser) throw Error("Unauthorized");
+  const user = await db.user.findFirst({
+    where: { username: { equals: username, mode: "insensitive" } },
+    select: getUserDataSelect(loggedInUser.id),
+  });
+
+  if (!user) {
+    return null
+  }
+
+  return user;
+});
