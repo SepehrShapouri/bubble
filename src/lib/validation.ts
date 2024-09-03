@@ -18,10 +18,15 @@ export const loginSchema = z.object({
 });
 
 export type loginSchemaValues = z.infer<typeof loginSchema>;
-export type authSchemaValues = loginSchemaValues | signupSchemaValues
-
-
+export type authSchemaValues = loginSchemaValues | signupSchemaValues;
 
 export const createPostSchema = z.object({
-  content:requiredString
-})
+  content: requiredString,
+});
+
+export const updateUserProfileSchema = z.object({
+  displayName: requiredString,
+  bio: z.string().max(1000, "Bio must be at most 1000 characters"),
+});
+
+export type updateUserProfileValues = z.infer<typeof updateUserProfileSchema>;

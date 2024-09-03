@@ -35,8 +35,9 @@ export const getUser = cache(async (username: string) => {
   });
 
   if (!user) {
-    return null
+    return null;
   }
 
   return user;
 });
+

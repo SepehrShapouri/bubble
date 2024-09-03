@@ -5,6 +5,7 @@ import { Control, FieldPath, FieldValue, Form } from "react-hook-form";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import { Textarea } from "./ui/textarea";
 type CustomInputTypes = {
   control: FieldValue<any>;
   label: string;
@@ -22,8 +23,9 @@ type CustomInputTypes = {
     | "decimal"
     | undefined;
   className?: string;
-  showPassword?:boolean,
-  setShowPassword?: Dispatch<SetStateAction<boolean>>
+  showPassword?: boolean;
+  setShowPassword?: Dispatch<SetStateAction<boolean>>;
+  input?: "input" | "textarea";
 };
 function CustomInput({
   control,
@@ -34,7 +36,8 @@ function CustomInput({
   inputmode = "text",
   className = "",
   showPassword = false,
-  setShowPassword 
+  input = "input",
+  setShowPassword,
 }: CustomInputTypes) {
   return (
     <FormField
@@ -42,27 +45,38 @@ function CustomInput({
       name={name}
       render={({ field }) => (
         <div className="space-y-1 text-start">
-          <FormLabel className="text-14 w-full max-w-[280px] font-medium">
+          <FormLabel className="text-14 w-full max-w-[280px] font-medium text-zinc-600">
             {label}
           </FormLabel>
           <div className="relative flex w-full flex-col">
             <FormControl>
-              <Input
-                placeholder={placeholder}
-                className={cn(
-                  "text-16 placeholder:text-16 rounded-lg border placeholder:text-gray-500",
-                  className,
-                )}
-                {...field}
-                type={type}
-                inputMode={inputmode}
-              />
+              {input == "input" ? (
+                <Input
+                  placeholder={placeholder}
+                  className={cn(
+                    "text-16 placeholder:text-16 rounded-lg border placeholder:text-gray-500",
+                    className,
+                  )}
+                  {...field}
+                  type={type}
+                  inputMode={inputmode}
+                />
+              ) : (
+                <Textarea
+                  placeholder={placeholder}
+                  className={cn(
+                    "text-16 placeholder:text-16 rounded-lg border placeholder:text-gray-500 resize-none",
+                    className,
+                  )}
+                  {...field}
+                />
+              )}
             </FormControl>
             {showPassword && setShowPassword && (
               <button
                 type="button"
                 className="absolute right-3 top-1/2 -translate-y-1/2"
-                onClick={()=>setShowPassword(!showPassword)}
+                onClick={() => setShowPassword(!showPassword)}
               >
                 {!showPassword ? (
                   <Eye className="h-4 w-4 text-gray-500" />
