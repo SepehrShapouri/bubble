@@ -2,14 +2,13 @@
 
 import { logout } from "@/app/(auth)/actions";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
 import {
-  Check,
   LogOutIcon,
   Monitor,
   Moon,
   Sun,
-  User,
-  UserIcon,
+  UserIcon
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -27,7 +26,6 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import UserAvatar from "./UserAvatar";
-import { useQueryClient } from "@tanstack/react-query";
 
 type UserButtonProps = {
   className?: string;
@@ -45,8 +43,8 @@ function UserButton({ className }: UserButtonProps) {
             "flex-none select-none rounded-full bg-secondary p-2 dark:bg-stone-950",
           )}
         >
-          {/* <UserAvatar avatarUrl={user.avatarUrl} size={40} /> */}
-          <User className="text-muted-foreground" />
+          <UserAvatar avatarUrl={user.avatarUrl} size={40} />
+          {/* <User className="text-muted-foreground" /> */}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="mx-4 sm:mx-0">
