@@ -22,6 +22,7 @@ export type authSchemaValues = loginSchemaValues | signupSchemaValues;
 
 export const createPostSchema = z.object({
   content: requiredString,
+  mediaIds:z.array(z.string()).max(10,"Cannot add more than 10 attachments!")
 });
 
 export const updateUserProfileSchema = z.object({
