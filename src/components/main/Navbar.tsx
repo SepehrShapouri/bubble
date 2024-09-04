@@ -18,7 +18,7 @@ function Navbar() {
             height={42}
             alt="bubble logo"
           />
-          <h1 className="hidden text-sky-700 sm:block">bubble</h1>
+          <h1 className="hidden text-primary sm:block">bubble</h1>
         </Link>
         <div className="flex items-center gap-4">
           <SearchField />
