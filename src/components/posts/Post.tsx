@@ -14,6 +14,7 @@ type PostProps = {
 };
 export default function Post({ post }: PostProps) {
   const { user } = useSession();
+  console.log(post.attachments)
   return (
     <article className="space-y-3 rounded-2xl bg-card p-5 shadow-sm">
       <div className="flex justify-between gap-3">

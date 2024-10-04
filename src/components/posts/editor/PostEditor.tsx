@@ -8,10 +8,11 @@ import { EditorContent, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { useSubmitPost } from "./mutations";
 import useMediaUpload, { Attachments } from "./useMediaUpload";
-import { useRef } from "react";
+import { ClipboardEvent, useRef } from "react";
 import { ImageIcon, Loader2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useDropzone } from "@uploadthing/react";
 function PostEditor() {
   const { mutate: submitPost, isPending } = useSubmitPost();
   const {
@@ -22,6 +23,12 @@ function PostEditor() {
     startUpload,
     uploadProgress,
   } = useMediaUpload();
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: startUpload,
+  });
+
+  const { onClick, ...rootProps } = getRootProps();
   const { user } = useSession();
   const editor = useEditor({
     extensions: [
@@ -50,6 +57,13 @@ function PostEditor() {
     );
   }
 
+  function onPaste(e: ClipboardEvent<HTMLInputElement>) {
+    const files = Array.from(e.clipboardData.items)
+      .filter((item) => item.kind === "file")
+      .map((item) => item.getAsFile()) as File[]
+
+      startUpload(files)
+  }
   return (
     <div className="flex flex-col gap-5 rounded-2xl bg-card p-5 shadow-sm ">
       <div className="flex gap-5">
@@ -58,10 +72,17 @@ function PostEditor() {
           className="hidden sm:inline"
           size={40}
         />
-        <EditorContent
-          editor={editor}
-          className="max-h-[20rem] w-full overflow-y-auto rounded-2xl bg-secondary px-5 py-3"
-        />
+        <div {...rootProps} className="w-full">
+          <EditorContent
+            editor={editor}
+            onPaste={onPaste}
+            className={cn(
+              "max-h-[20rem] w-full overflow-y-auto rounded-2xl bg-secondary px-5 py-3",
+              isDragActive && "outline-dashed",
+            )}
+          />
+          <input {...getInputProps()} />
+        </div>
       </div>
       {!!attachments.length && (
         <AttachmentsPreviews
