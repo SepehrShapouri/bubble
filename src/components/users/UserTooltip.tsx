@@ -1,3 +1,4 @@
+'use client'
 import { FollowerInfo, UserData } from "@/lib/types";
 import { PropsWithChildren } from "react";
 
