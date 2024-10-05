@@ -23,6 +23,7 @@ model User {
   Following     Follow[]  @relation("following")
   Followers     Follow[]  @relation("followers")
   createdAt     DateTime  @default(now())
+  Like          Like[]
 
   @@map("users")
 }
@@ -43,6 +44,7 @@ model Post {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   attachments Media[]
+  Like        Like[]
 
   @@map("posts")
 }
@@ -71,4 +73,14 @@ model Follow {
 
   @@unique([followerId, followingId])
   @@map("follows")
+}
+
+model Like {
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+
+  @@unique([userId,postId])
+  @@map("likes")
 }

@@ -9,6 +9,7 @@ import Linkify from "../Linkify";
 import UserTooltip from "../users/UserTooltip";
 import { Media } from "@prisma/client";
 import Image from "next/image";
+import LikeButton from "./LikeButton";
 
 type PostProps = {
   post: PostData;
@@ -17,8 +18,8 @@ export default function Post({ post }: PostProps) {
   const { user } = useSession();
   console.log(user);
   return (
-      <article className="space-y-3 rounded-2xl bg-card p-5 shadow-sm">
-            <Link href={`/posts/${post.id}`} className="space-y-3">
+    <article className="space-y-3 rounded-2xl bg-card p-5 shadow-sm">
+      <Link href={`/posts/${post.id}`} className="space-y-3">
         <div className="flex justify-between gap-3">
           <div className="flex flex-wrap gap-3">
             <UserTooltip user={post.user}>
@@ -52,8 +53,16 @@ export default function Post({ post }: PostProps) {
         {!!post.attachments.length && (
           <MediaPreviews attachments={post.attachments} />
         )}
-        </Link>
-      </article>
+      </Link>
+      <hr className="text-muted-foreground" />
+      <LikeButton
+        postId={post.id}
+        initialState={{
+          likes: post._count.Like,
+          isLikedByUser: !!post.Like.some((like) => like.userId == user.id),
+        }}
+      />
+    </article>
   );
 }
 
