@@ -29,6 +29,8 @@ const getUser = cache(async (username: string, loggedInUserId: string) => {
 
   return user;
 });
+
+
 export async function generateMetadata({
   params: { username },
 }: PageProps): Promise<Metadata> {
@@ -85,48 +87,56 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
   };
 
   return (
-    <div className="h-fit w-full space-y-5 rounded-2xl bg-card p-5 shadow-sm">
+    <div className="h-fit w-full space-y-5 lg:space-y-0 lg:gap-6 rounded-2xl bg-card p-5 shadow-sm lg:flex lg:items-start ">
       <UserAvatar
         avatarUrl={user.avatarUrl}
         size={250}
-        className="mx-auto size-full max-h-60 max-w-60 rounded-full"
+        className="mx-auto lg:mx-0 size-full lg:size-32 max-h-60 max-w-60 rounded-full"
       />
-      <div className="flex flex-wrap gap-3 sm:flex-nowrap">
-        <div className="me-auto space-y-3">
+      <div className=" flex flex-col gap-5 w-full">
+        <div className="flex gap-4 justify-between w-full">
           <div className="">
-            <h1 className="text-3xl font-bold">{user.displayName}</h1>
-            <div className="text-muted-foreground">@{user.username}</div>
-          </div>
-          <div className="">
-            Member since {formatDate(user.createdAt, "MMM d, yyyy")}
-          </div>
-          <div className="flex items-center gap-3">
-            <span>
-              Posts:{" "}
-              <span className="font-semibold">
-                {formatNumber(user._count.posts)}
-              </span>
-            </span>
-            <FollowerCount userId={user.id} initialState={followerInfo} />
-          </div>
-        </div>
-        {user.id === loggedInUserId ? (
-          <EditProfileButton user={user}/>
-        ) : (
-          <FollowButton userId={user.id} initialState={followerInfo} />
-        )}
-      </div>
-
-      {user.bio && (
-        <>
-          <hr />
-          <Linkify>
-            <div className="whitespace-pre-line overflow-hidden break-words">
-              {user.bio}
+            <h1 className="text-3xl font-bold lg:text-2xl">
+              {user.displayName}
+            </h1>
+            <div className="text-muted-foreground lg:text-sm">
+              @{user.username}
             </div>
-          </Linkify>
-        </>
-      )}
+          </div>
+          {user.id === loggedInUserId ? (
+            <EditProfileButton user={user} />
+          ) : (
+            <FollowButton userId={user.id} initialState={followerInfo} />
+          )}
+        </div>
+        {user.bio && (
+              <>
+                <Linkify>
+                  <div className="whitespace-pre-line overflow-hidden break-words">
+                    {user.bio}
+                  </div>
+                </Linkify>
+              </>
+            )}
+            <div className="text-xs text-muted-foreground">
+              Member since {formatDate(user.createdAt, "MMM d, yyyy")}
+            </div>
+        <div className="flex items-center gap-3 w-full justify-between">
+          <span className="flex items-center flex-col">
+            <span className="font-semibold text-sm">
+              {formatNumber(user._count.posts)}
+            </span>
+            <p className="text-muted-foreground">posts</p>
+          </span>
+          <FollowerCount userId={user.id} initialState={followerInfo}  user={user}/>
+          <span className="flex items-center flex-col">
+            <span className="font-semibold text-sm">
+              {formatNumber(user._count.Following)}
+            </span>
+            <p className="text-muted-foreground">following</p>
+          </span>
+        </div>
+      </div>
     </div>
   );
 }

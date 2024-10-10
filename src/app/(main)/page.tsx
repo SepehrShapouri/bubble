@@ -1,12 +1,12 @@
-import PostEditor from "@/components/posts/editor/PostEditor";
-import Image from "next/image";
-import Post from "@/components/posts/Post";
 import TrendsSidebar from "@/components/main/TrendsSidebar";
-import { getPosts } from "@/components/main/actions";
-import ForYouFeed from "./ForYouFeed";
+import PostEditor from "@/components/posts/editor/PostEditor";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Metadata } from "next";
 import FollowingFeed from "./FollowingFeed";
-
+import ForYouFeed from "./ForYouFeed";
+export const metadata: Metadata = {
+  title: "Home",
+};
 export default function Home() {
   return (
     <div className="w-full min-w-0  flex gap-5">

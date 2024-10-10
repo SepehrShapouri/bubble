@@ -81,7 +81,7 @@ async function TrendingTopics() {
         return (
           <Link key={title} href={`/hashtag/${title}`} className="block">
             <p
-              className="line-clamp-1 break-all font-semibold hover:underline"
+              className="line-clamp-1 break-all font-semibold  hover:underline"
               title={hashtag}
             >
               {hashtag}
@@ -96,7 +96,7 @@ async function TrendingTopics() {
   );
 }
 
-function WhoToFollowSkeleton() {
+export function WhoToFollowSkeleton() {
   return (
     <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm">
       <div className="text-xl font-bold">Who to follow</div>

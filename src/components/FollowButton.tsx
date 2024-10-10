@@ -46,9 +46,7 @@ function FollowButton({ userId, initialState }: FollowButtonProps) {
     <Button
       variant={data.isFollowedByUser ? "secondary" : "default"}
       onClick={() =>
-        changeFollowState(userId, {
-          onSuccess: () => toast({ description: "test" }),
-        })
+        changeFollowState(userId)
       }
     >
       {data.isFollowedByUser ? "Following" : "Follow"}

@@ -10,7 +10,7 @@ function Navbar() {
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-5 px-3 py-2 sm:justify-between">
         <Link
           href="/"
-          className="flex items-center gap-2 text-2xl font-bold text-primary"
+          className="flex items-center gap-2 text-2xl font-bold "
         >
           <Image
             src="/bubble-logo.png"
@@ -18,7 +18,7 @@ function Navbar() {
             height={42}
             alt="bubble logo"
           />
-          <h1 className="hidden text-primary sm:block">bubble</h1>
+          <h1 className="hidden sm:block">bubble</h1>
         </Link>
         <div className="flex items-center gap-4">
           <SearchField />

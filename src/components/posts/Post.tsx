@@ -2,7 +2,7 @@
 import { PostData } from "@/lib/types";
 import Link from "next/link";
 import UserAvatar from "../main/UserAvatar";
-import { cn, formatRelativeDate } from "@/lib/utils";
+import { cn, formatNumber, formatRelativeDate } from "@/lib/utils";
 import { useSession } from "../providers/SessionProvider";
 import PostActions from "./PostActions";
 import Linkify from "../Linkify";
@@ -11,11 +11,15 @@ import { Media } from "@prisma/client";
 import Image from "next/image";
 import LikeButton from "./LikeButton";
 import BookmarkButton from "../bookmarks/BookmarkButton";
+import { useState } from "react";
+import { MessageCircle, MessageSquare } from "lucide-react";
+import Comments from "../comments/Comments";
 
 type PostProps = {
   post: PostData;
 };
 export default function Post({ post }: PostProps) {
+  const [showComments, setShowComments] = useState<boolean>(false);
   const { user } = useSession();
   console.log(user);
   return (
@@ -55,15 +59,20 @@ export default function Post({ post }: PostProps) {
           <MediaPreviews attachments={post.attachments} />
         )}
       </Link>
-      <hr className="text-muted-foreground" />
       <div className="flex justify-between gap-5">
-        <LikeButton
-          postId={post.id}
-          initialState={{
-            likes: post._count.Like,
-            isLikedByUser: !!post.Like.some((like) => like.userId == user.id),
-          }}
-        />
+        <div className="flex items-cener gap-5">
+          <LikeButton
+            postId={post.id}
+            initialState={{
+              likes: post._count.Like,
+              isLikedByUser: !!post.Like.some((like) => like.userId == user.id),
+            }}
+          />
+          <CommentButton
+            post={post}
+            onClick={() => setShowComments(!showComments)}
+          />
+        </div>
         {post.userId != user.id && (
           <BookmarkButton
             postId={post.id}
@@ -75,6 +84,8 @@ export default function Post({ post }: PostProps) {
           />
         )}
       </div>
+
+      {showComments && <Comments post={post} />}
     </article>
   );
 }
@@ -127,4 +138,20 @@ function MediaPreview({ media }: MediaPreviewProps) {
   }
 
   return <p className="text-destructive">Unsuppoerted media type</p>;
+}
+
+type CommentButtonProps = {
+  post: PostData;
+  onClick: () => void;
+};
+
+function CommentButton({ onClick, post }: CommentButtonProps) {
+  return (
+    <button onClick={onClick} className="flex items-center gap-1">
+      <MessageCircle className="size-5 fill-muted-foreground text-muted-foreground" />
+      <span className="text-sm font-medium tabular-nums">
+        {formatNumber(post._count.Comment)}
+      </span>
+    </button>
+  );
 }

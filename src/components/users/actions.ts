@@ -31,7 +31,7 @@ export async function getFollowers(userId: string) {
 }
 
 export async function followUser(userId: string) {
-    console.log(userId)
+  console.log(userId);
   const { user: loggedInUser } = await validateRequest();
   if (!loggedInUser) throw Error("Unauthorized");
   await db.follow.upsert({
@@ -44,11 +44,11 @@ export async function followUser(userId: string) {
     create: { followerId: loggedInUser.id, followingId: userId },
     update: {},
   });
-  console.log('success')
+  console.log("success");
 }
 
 export async function unFollowUser(userId: string) {
-    console.log(userId)
+  console.log(userId);
   const { user: loggedInUser } = await validateRequest();
   if (!loggedInUser) throw Error("Unauthorized");
 

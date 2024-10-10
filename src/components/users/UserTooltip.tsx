@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { FollowerInfo, UserData } from "@/lib/types";
 import { PropsWithChildren } from "react";
 
@@ -18,6 +18,7 @@ import UserAvatar from "../main/UserAvatar";
 import FollowButton from "../FollowButton";
 import Linkify from "../Linkify";
 import FollowerCount from "./FollowerCount";
+import { formatNumber } from "@/lib/utils";
 
 function UserTooltip({ children, user }: UserTooltipProps) {
   const { user: loggedInUser } = useSession();
@@ -57,7 +58,15 @@ function UserTooltip({ children, user }: UserTooltipProps) {
                 </div>
               </Linkify>
             )}
-            <FollowerCount userId={user.id} initialState={followerInfo} />
+            <span
+              className="flex items-center"
+            >
+              <span className="font-semibold text-sm">
+                {formatNumber(user._count.Followers)}
+              </span>
+              <p className="text-muted-foreground">followers</p>
+            </span>
+            {/* <FollowerCount userId={user.id} initialState={followerInfo} /> */}
           </div>
         </TooltipContent>
       </Tooltip>

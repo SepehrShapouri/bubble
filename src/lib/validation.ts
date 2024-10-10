@@ -22,7 +22,7 @@ export type authSchemaValues = loginSchemaValues | signupSchemaValues;
 
 export const createPostSchema = z.object({
   content: requiredString,
-  mediaIds:z.array(z.string()).max(10,"Cannot add more than 10 attachments!")
+  mediaIds: z.array(z.string()).max(10, "Cannot add more than 10 attachments!"),
 });
 
 export const updateUserProfileSchema = z.object({
@@ -31,3 +31,7 @@ export const updateUserProfileSchema = z.object({
 });
 
 export type updateUserProfileValues = z.infer<typeof updateUserProfileSchema>;
+
+export const commentSchema = z.object({
+  content: requiredString,
+});

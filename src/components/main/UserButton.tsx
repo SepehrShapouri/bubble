@@ -40,7 +40,7 @@ function UserButton({ className }: UserButtonProps) {
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "flex-none select-none rounded-full bg-secondary p-2 dark:bg-stone-950",
+            "flex-none select-none rounded-full bg-secondary  dark:bg-stone-950",
           )}
         >
           <UserAvatar avatarUrl={user.avatarUrl} size={40} />

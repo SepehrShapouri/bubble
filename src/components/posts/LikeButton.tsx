@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-query";
 import { deleteLike, getPostLikes, likePost } from "./actions";
 import { Heart } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, formatNumber } from "@/lib/utils";
 type LikeButtonProps = {
   postId: string;
   initialState: LikeInfo;
@@ -50,7 +50,7 @@ function LikeButton({ initialState, postId }: LikeButtonProps) {
     },
   });
   return (
-    <button onClick={() => mutate()} className="flex items-center gap-2">
+    <button onClick={() => mutate()} className="flex items-center gap-1">
       <Heart
         className={cn(
           "size-5",
@@ -58,7 +58,7 @@ function LikeButton({ initialState, postId }: LikeButtonProps) {
         )}
       />
       <span className="text-sm font-medium tabular-nums">
-        {likes.likes} <span className="hidden sm:inline">likes</span>
+        {formatNumber(likes.likes)}
       </span>
     </button>
   );

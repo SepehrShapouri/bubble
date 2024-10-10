@@ -72,7 +72,7 @@ function CustomInput({
                 />
               )}
             </FormControl>
-            {showPassword && setShowPassword && (
+            { setShowPassword && (
               <button
                 type="button"
                 className="absolute right-3 top-1/2 -translate-y-1/2"
