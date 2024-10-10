@@ -23,6 +23,9 @@ export async function getPosts(cursor: string) {
   };
   return data;
 }
+
+
+
 export async function getFollowingPosts(cursor: string) {
   const { user } = await validateRequest();
   if (!user) throw Error("Unauthorized");
