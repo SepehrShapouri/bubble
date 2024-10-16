@@ -3,14 +3,17 @@ import UserTooltip from "../users/UserTooltip";
 import Link from "next/link";
 import UserAvatar from "../main/UserAvatar";
 import { formatRelativeDate } from "@/lib/utils";
+import { useSession } from "../providers/SessionProvider";
+import CommentActions from "./CommentActions";
 
 type CommentProps = {
   comment: CommentData;
 };
 
 export function Comment({ comment }: CommentProps) {
+  const { user } = useSession();
   return (
-    <div className="flex gap-3 py-3">
+    <div className="flex gap-3 py-3 group/comment">
       <span className="hidden sm:inline">
         <UserTooltip user={comment.user}>
           <Link href={`/users/${comment.user.username}`}>
@@ -34,6 +37,12 @@ export function Comment({ comment }: CommentProps) {
         </div>
         <div>{comment.content}</div>
       </div>
+      {comment.user.id === user.id && (
+        <CommentActions
+          comment={comment}
+          className="ms-auto md:opacity-0 transition-all md:group-hover/comment:opacity-100"
+        />
+      )}
     </div>
   );
 }

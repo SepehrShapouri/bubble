@@ -5,8 +5,8 @@ import {
   InfiniteData,
 } from "@tanstack/react-query";
 import { useToast } from "../ui/use-toast";
-import { submitComment } from "./actions";
-import { CommentPage } from "@/lib/types";
+import { deleteComment, submitComment } from "./actions";
+import { CommentData, CommentPage } from "@/lib/types";
 
 export function useSubmitComment(postId: string) {
   const { toast } = useToast();
@@ -54,5 +54,44 @@ export function useSubmitComment(postId: string) {
       });
     },
   });
+  return { mutate, isPending };
+}
+
+export function useDeleteComment() {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: deleteComment,
+    onSuccess: async (deletedComment) => {
+      const queryKey: QueryKey = ["comments", deletedComment.postId];
+
+      await queryClient.cancelQueries({ queryKey });
+
+      queryClient.setQueryData<InfiniteData<CommentPage, string | null>>(
+        queryKey,
+        (oldData) => {
+          if (!oldData) return;
+          return {
+            pageParams: oldData.pageParams,
+            pages: oldData.pages.map((page) => ({
+              previousCursor: page.previousCursor,
+              comments: page.comments.filter((c) => c.id != deletedComment.id),
+            })),
+          };
+        },
+      );
+
+      toast({
+        description: "Comment deleted",
+      });
+    },
+    onError: () => {
+      toast({
+        variant: "destructive",
+        description: "Failed to delete comment",
+      });
+    },
+  });
+
   return { mutate, isPending };
 }

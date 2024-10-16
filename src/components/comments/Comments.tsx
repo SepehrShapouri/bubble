@@ -38,8 +38,14 @@ function Comments({ post }: CommentsProps) {
         </Button>
       )}
       {status == "pending" && <Loader2 className="mx-auto animate-spin" />}
-      {status == 'success' && !comments.length && (<p className="text-muted-foreground text-center">No comments yet.</p>)}
-      {status == 'error'}
+      {status == "success" && !comments.length && (
+        <p className="text-muted-foreground text-center">No comments yet.</p>
+      )}
+      {status == "error" && (
+        <p className="text-center text-destructive">
+          An error occured while loading comments for this post
+        </p>
+      )}
       <div className="divide-y ">
         {comments.map((comment) => (
           <Comment comment={comment} key={comment.id} />
