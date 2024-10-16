@@ -19,6 +19,7 @@ import FollowButton from "../FollowButton";
 import Linkify from "../Linkify";
 import FollowerCount from "./FollowerCount";
 import { formatNumber } from "@/lib/utils";
+import useFollowerInfo from "@/hooks/useFollowerInfo";
 
 function UserTooltip({ children, user }: UserTooltipProps) {
   const { user: loggedInUser } = useSession();
@@ -58,15 +59,21 @@ function UserTooltip({ children, user }: UserTooltipProps) {
                 </div>
               </Linkify>
             )}
-            <span
-              className="flex items-center"
-            >
-              <span className="font-semibold text-sm">
-                {formatNumber(user._count.Followers)}
+            <div className="flex items-center justify-between">
+              <FollowerCount userId={user.id} initialState={followerInfo} />
+              <span className="flex items-center flex-col cursor-pointer">
+                <span className="font-semibold text-sm">
+                  {formatNumber(user._count.Following)}
+                </span>
+                <p className="text-muted-foreground">following</p>
               </span>
-              <p className="text-muted-foreground">followers</p>
-            </span>
-            {/* <FollowerCount userId={user.id} initialState={followerInfo} /> */}
+              <span className="flex items-center flex-col cursor-pointer">
+                <span className="font-semibold text-sm">
+                  {formatNumber(user._count.posts)}
+                </span>
+                <p className="text-muted-foreground">posts</p>
+              </span>
+            </div>
           </div>
         </TooltipContent>
       </Tooltip>

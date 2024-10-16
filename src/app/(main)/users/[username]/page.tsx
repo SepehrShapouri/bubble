@@ -30,7 +30,6 @@ const getUser = cache(async (username: string, loggedInUserId: string) => {
   return user;
 });
 
-
 export async function generateMetadata({
   params: { username },
 }: PageProps): Promise<Metadata> {
@@ -110,17 +109,17 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
           )}
         </div>
         {user.bio && (
-              <>
-                <Linkify>
-                  <div className="whitespace-pre-line overflow-hidden break-words">
-                    {user.bio}
-                  </div>
-                </Linkify>
-              </>
-            )}
-            <div className="text-xs text-muted-foreground">
-              Member since {formatDate(user.createdAt, "MMM d, yyyy")}
-            </div>
+          <>
+            <Linkify>
+              <div className="whitespace-pre-line overflow-hidden break-words">
+                {user.bio}
+              </div>
+            </Linkify>
+          </>
+        )}
+        <div className="text-xs text-muted-foreground">
+          Member since {formatDate(user.createdAt, "MMM d, yyyy")}
+        </div>
         <div className="flex items-center gap-3 w-full justify-between">
           <span className="flex items-center flex-col">
             <span className="font-semibold text-sm">
@@ -128,7 +127,7 @@ async function UserProfile({ user, loggedInUserId }: UserProfileProps) {
             </span>
             <p className="text-muted-foreground">posts</p>
           </span>
-          <FollowerCount userId={user.id} initialState={followerInfo}  user={user}/>
+          <FollowerCount userId={user.id} initialState={followerInfo} />
           <span className="flex items-center flex-col">
             <span className="font-semibold text-sm">
               {formatNumber(user._count.Following)}

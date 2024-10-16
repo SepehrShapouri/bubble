@@ -6,7 +6,7 @@ import { getPostDataInclude, getUserDataSelect, PostsPage } from "@/lib/types";
 import { cache } from "react";
 
 export async function getUsersPost(userId: string, cursor: string) {
-  console.log(userId);
+  
   const { user } = await validateRequest();
   if (!user) throw Error("Unauthorized");
   const pageNumber = 10;
