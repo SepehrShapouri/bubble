@@ -31,27 +31,45 @@ export async function getFollowers(userId: string) {
 }
 
 export async function followUser(userId: string) {
-  
   const { user: loggedInUser } = await validateRequest();
   if (!loggedInUser) throw Error("Unauthorized");
-  await db.follow.upsert({
-    where: {
-      followerId_followingId: {
-        followerId: loggedInUser.id,
-        followingId: userId,
+
+  await db.$transaction([
+    db.follow.upsert({
+      where: {
+        followerId_followingId: {
+          followerId: loggedInUser.id,
+          followingId: userId,
+        },
       },
-    },
-    create: { followerId: loggedInUser.id, followingId: userId },
-    update: {},
-  });
-  
+      create: { followerId: loggedInUser.id, followingId: userId },
+      update: {},
+    }),
+    db.notification.create({
+      data: {
+        issuerId: loggedInUser.id,
+        recipientId: userId,
+        type: "FOLLOW",
+      },
+    }),
+  ]);
 }
 
 export async function unFollowUser(userId: string) {
-  
   const { user: loggedInUser } = await validateRequest();
   if (!loggedInUser) throw Error("Unauthorized");
-
+  await db.$transaction([
+    db.follow.deleteMany({
+      where: { followerId: loggedInUser.id, followingId: userId },
+    }),
+    db.notification.deleteMany({
+      where: {
+        issuerId: loggedInUser.id,
+        recipientId: userId,
+        type: "FOLLOW",
+      },
+    }),
+  ]);
   await db.follow.deleteMany({
     where: { followerId: loggedInUser.id, followingId: userId },
   });

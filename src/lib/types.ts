@@ -12,7 +12,7 @@ export function getUserDataSelect(loggedInUserId: string) {
       where: { followerId: loggedInUserId },
       select: { followerId: true },
     },
-    _count: { select: { Followers: true, posts: true ,Following:true} },
+    _count: { select: { Followers: true, posts: true, Following: true } },
   } satisfies Prisma.UserSelect;
 }
 
@@ -85,3 +85,32 @@ export type CommentPage = {
   comments: CommentData[];
   previousCursor: string | null;
 };
+
+export const notificationsInclude = {
+  issuer: {
+    select: {
+      username: true,
+      displayName: true,
+      avatarUrl: true,
+    },
+  },
+  post: {
+    select: {
+      content: true,
+    },
+  },
+} satisfies Prisma.NotificationInclude;
+
+export type NotificationData = Prisma.NotificationGetPayload<{
+  include: typeof notificationsInclude;
+}>;
+
+export type NotificationsPage = {
+  notifications: NotificationData[];
+  nextCursor: string | null;
+};
+
+
+export type NotificationCountInfo = {
+  unreadCount : number
+}

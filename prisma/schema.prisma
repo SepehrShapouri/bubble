@@ -10,22 +10,24 @@ datasource db {
 }
 
 model User {
-  id            String     @id() @default(cuid())
-  username      String     @unique
-  password_hash String?
-  email         String?    @unique
-  displayName   String
-  sessions      Session[]
-  googleId      String?    @unique
-  avatarUrl     String?
-  bio           String?
-  posts         Post[]
-  Following     Follow[]   @relation("following")
-  Followers     Follow[]   @relation("followers")
-  createdAt     DateTime   @default(now())
-  Like          Like[]
-  Bookmark      Bookmark[]
-  Comment       Comment[]
+  id                    String         @id() @default(cuid())
+  username              String         @unique
+  password_hash         String?
+  email                 String?        @unique
+  displayName           String
+  sessions              Session[]
+  googleId              String?        @unique
+  avatarUrl             String?
+  bio                   String?
+  posts                 Post[]
+  Following             Follow[]       @relation("following")
+  Followers             Follow[]       @relation("followers")
+  createdAt             DateTime       @default(now())
+  Like                  Like[]
+  Bookmark              Bookmark[]
+  Comment               Comment[]
+  receivedNotifications Notification[] @relation("Recipient")
+  IssuedNotifications   Notification[] @relation("Issuer")
 
   @@map("users")
 }
@@ -40,15 +42,16 @@ model Session {
 }
 
 model Post {
-  id          String     @id @default(cuid())
-  content     String
-  userId      String
-  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime   @default(now())
-  attachments Media[]
-  Like        Like[]
-  Bookmark    Bookmark[]
-  Comment     Comment[]
+  id           String         @id @default(cuid())
+  content      String
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime       @default(now())
+  attachments  Media[]
+  Like         Like[]
+  Bookmark     Bookmark[]
+  Comment      Comment[]
+  LinkedNotifications Notification[]
 
   @@map("posts")
 }
@@ -111,4 +114,25 @@ model Bookmark {
 
   @@unique([userId, postId])
   @@map("bookmarks")
+}
+
+model Notification {
+  id          String           @id @default(cuid())
+  recipientId String
+  recipient   User             @relation("Recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  issuerId    String
+  issuer      User             @relation("Issuer", fields: [issuerId], references: [id], onDelete: Cascade)
+  postId      String?
+  post        Post?             @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type        NotificationType
+  read        Boolean          @default(false)
+
+  createdAt DateTime @default(now())
+  @@map("notifications")
+}
+
+enum NotificationType {
+  LIKE
+  FOLLOW
+  COMMENT
 }

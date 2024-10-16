@@ -16,14 +16,30 @@ export async function submitComment({
   if (!user) throw Error("Unauthenticated");
 
   const { content: validatedContent } = commentSchema.parse({ content });
-  const newComment = await db.comment.create({
-    data: {
-      content: validatedContent,
-      postId: post.id,
-      userId: user.id,
-    },
-    include: getCommentDataInclude(user.id),
-  });
+
+  const [newComment] = await db.$transaction([
+    db.comment.create({
+      data: {
+        content: validatedContent,
+        postId: post.id,
+        userId: user.id,
+      },
+      include: getCommentDataInclude(user.id),
+    }),
+    ...(post.user.id !== user.id
+      ? [
+          db.notification.create({
+            data: {
+              issuerId: user.id,
+              recipientId: post.user.id,
+              type: "COMMENT",
+              postId: post.id,
+            },
+          }),
+        ]
+      : []),
+  ]);
+
   return newComment;
 }
 
@@ -72,8 +88,8 @@ export async function deleteComment(id: string) {
 
   const deletedComment = await db.comment.delete({
     where: { id },
-    include:getCommentDataInclude(user.id)
+    include: getCommentDataInclude(user.id),
   });
 
-  return deletedComment
+  return deletedComment;
 }
