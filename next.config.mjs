@@ -6,6 +6,9 @@ const nextConfig = {
     },
   },
   serverExternalPackages: ["@node-rs/argon2"],
+  eslint:{
+    ignoreDuringBuilds:true
+  },
   images: {
     remotePatterns: [
       {

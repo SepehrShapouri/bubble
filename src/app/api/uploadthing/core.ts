@@ -1,5 +1,6 @@
 import { validateRequest } from "@/auth";
 import { db } from "@/lib/db";
+import streamServerClient from "@/lib/stream";
 import { createUploadthing, FileRouter } from "uploadthing/next";
 import { UploadThingError, UTApi } from "uploadthing/server";
 const f = createUploadthing();
@@ -26,12 +27,20 @@ export const fileRouter = {
         `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`,
       );
 
-      await db.user.update({
-        where: { id: metadata.user.id },
-        data: {
-          avatarUrl: newAvatarUrl,
-        },
-      });
+      await Promise.all([
+        db.user.update({
+          where: { id: metadata.user.id },
+          data: {
+            avatarUrl: newAvatarUrl,
+          },
+        }),
+        streamServerClient.partialUpdateUser({
+          id: metadata.user.id,
+          set: {
+            image: newAvatarUrl,
+          },
+        }),
+      ]);
 
       return { avatarUrl: newAvatarUrl };
     }),

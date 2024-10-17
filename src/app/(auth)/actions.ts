@@ -12,6 +12,7 @@ import { lucia, validateRequest } from "@/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { isRedirectError } from "next/dist/client/components/redirect";
+import streamServerClient from "@/lib/stream";
 
 async function createUserSession(userId: string) {
   const session = await lucia.createSession(userId, {});
@@ -57,25 +58,23 @@ export async function signUp(
       return { error: "The email address has already been picked." };
     }
 
-    await db.user.create({
-      data: {
-        username,
-        email,
+    await db.$transaction(async (tx) => {
+      await tx.user.create({
+        data: {
+          username,
+          email,
+          id: userId,
+          displayName: username,
+          password_hash,
+        },
+      });
+      await streamServerClient.upsertUser({
         id: userId,
-        displayName: username,
-        password_hash,
-      },
+        username,
+        name: username,
+      });
     });
-    // const session = await lucia.createSession(userId, {});
 
-    // const sessionCookie = lucia.createSessionCookie(session.id);
-
-    // cookies().set(
-    //   sessionCookie.name,
-    //   sessionCookie.value,
-    //   sessionCookie.attributes,
-    // );
-    //
     await createUserSession(userId);
     return redirect("/");
   } catch (error) {
