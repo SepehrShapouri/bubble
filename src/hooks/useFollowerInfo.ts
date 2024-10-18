@@ -1,4 +1,3 @@
-import { getFollowers } from "@/components/users/actions";
 import api from "@/lib/ky";
 import { FollowerInfo } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";

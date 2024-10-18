@@ -1,11 +1,11 @@
 "use client";
 import { FollowerInfo, UserData } from "@/lib/types";
+import { formatNumber } from "@/lib/utils";
+import Link from "next/link";
 import { PropsWithChildren } from "react";
-
-type UserTooltipProps = PropsWithChildren & {
-  user: UserData;
-};
-import React from "react";
+import FollowButton from "../FollowButton";
+import Linkify from "../Linkify";
+import UserAvatar from "../main/UserAvatar";
 import { useSession } from "../providers/SessionProvider";
 import {
   Tooltip,
@@ -13,13 +13,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import Link from "next/link";
-import UserAvatar from "../main/UserAvatar";
-import FollowButton from "../FollowButton";
-import Linkify from "../Linkify";
 import FollowerCount from "./FollowerCount";
-import { formatNumber } from "@/lib/utils";
-import useFollowerInfo from "@/hooks/useFollowerInfo";
+
+type UserTooltipProps = PropsWithChildren & {
+  user: UserData;
+};
 
 function UserTooltip({ children, user }: UserTooltipProps) {
   const { user: loggedInUser } = useSession();

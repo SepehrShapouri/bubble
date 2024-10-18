@@ -1,12 +1,10 @@
 "use client";
 import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
-import { getFollowingPosts } from "@/components/main/actions";
 import Post from "@/components/posts/Post";
 import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
+import api from "@/lib/ky";
 import { PostsPage } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getUsersPost } from "../actions";
-import api from "@/lib/ky";
 type UserPostsProps = {
   userId: string;
 };

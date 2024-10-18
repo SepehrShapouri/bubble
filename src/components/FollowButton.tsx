@@ -1,17 +1,15 @@
 "use client";
 import useFollowerInfo from "@/hooks/useFollowerInfo";
+import api from "@/lib/ky";
 import { FollowerInfo } from "@/lib/types";
+import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Button } from "./ui/button";
+import { useToast } from "./ui/use-toast";
 
 type FollowButtonProps = {
   userId: string;
   initialState: FollowerInfo;
 };
-import React from "react";
-import { useToast } from "./ui/use-toast";
-import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "./ui/button";
-import { followUser, unFollowUser } from "./users/actions";
-import api from "@/lib/ky";
 
 function FollowButton({ userId, initialState }: FollowButtonProps) {
   const { data } = useFollowerInfo(userId, initialState);
