@@ -7,11 +7,8 @@ import SearchField from "./SearchField";
 function Navbar() {
   return (
     <header className="sticky top-0 z-10 bg-card shadow-sm">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center   gap-5 px-3 py-2 justify-between">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-2xl font-bold "
-        >
+      <div className="sm:mx-auto flex max-w-7xl  items-center   gap-5 px-3 py-2 justify-between">
+        <Link href="/" className="flex items-center gap-2 text-2xl font-bold ">
           <Image
             src="/bubble-logo.png"
             width={62}
