@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
@@ -22,8 +22,20 @@ export const metadata: Metadata = {
     default: "bubble",
   },
   description: "Your daily go to social network",
+  manifest:'/manifest.json',
+  appleWebApp:{
+    capable:true,
+    statusBarStyle:'default',
+    title:"Bubble"
+  },
+  icons:{
+    icon:"/ios/192.png",
+    apple:'/ios/180.png'
+  }
 };
-
+export const viewport:Viewport = {
+  themeColor:'#2563eb',
+}
 export default function RootLayout({
   children,
 }: Readonly<{

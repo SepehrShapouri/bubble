@@ -1,3 +1,4 @@
+'use client'
 import { useSession } from "@/components/providers/SessionProvider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

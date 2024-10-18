@@ -1,3 +1,4 @@
+'use client'
 import UserAvatar from "@/components/main/UserAvatar";
 import { useSession } from "@/components/providers/SessionProvider";
 import { Button } from "@/components/ui/button";
