@@ -1,12 +1,12 @@
 import { validateRequest } from "@/auth";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { Bell, Bookmark, Home, Mail } from "lucide-react";
-import Link from "next/link";
-import NotificationsMenuLink from "./NotificationsMenuLink";
+import { buttonVariants } from "@/components/ui/button";
 import { db } from "@/lib/db";
-import MessagesMenuLink from "./MessagesMenuLink";
 import streamServerClient from "@/lib/stream";
+import { cn } from "@/lib/utils";
+import { Bookmark, Home } from "lucide-react";
+import Link from "next/link";
+import MessagesMenuLink from "./MessagesMenuLink";
+import NotificationsMenuLink from "./NotificationsMenuLink";
 
 interface MenuBarProps {
   className?: string;
@@ -27,9 +27,6 @@ export default async function MenuBar({ className }: MenuBarProps) {
     (await streamServerClient.getUnreadCount(user.id)).total_unread_count,
   ]);
 
-  const { total_unread_count } = await streamServerClient.getUnreadCount(
-    user.id,
-  );
   return (
     <div className={className}>
       <Link

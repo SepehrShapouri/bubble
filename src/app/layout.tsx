@@ -22,20 +22,20 @@ export const metadata: Metadata = {
     default: "bubble",
   },
   description: "Your daily go to social network",
-  manifest:'/manifest.json',
-  appleWebApp:{
-    capable:true,
-    statusBarStyle:'default',
-    title:"Bubble"
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Bubble",
   },
-  icons:{
-    icon:"/ios/192.png",
-    apple:'/ios/180.png'
-  }
+  icons: {
+    icon: "/ios/192.png",
+    apple: "/ios/180.png",
+  },
 };
-export const viewport:Viewport = {
-  themeColor:'#2563eb',
-}
+export const viewport: Viewport = {
+  themeColor: "#2563eb",
+};
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -45,17 +45,16 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <NextSSRPlugin routerConfig={extractRouterConfig(fileRouter)} />
-        <Providers>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </Providers>
+
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

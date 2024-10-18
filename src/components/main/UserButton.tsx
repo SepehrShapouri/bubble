@@ -34,7 +34,7 @@ type UserButtonProps = {
 function UserButton({ className }: UserButtonProps) {
   const { session, user } = useSession();
   const { theme, setTheme } = useTheme();
-  const querClient = useQueryClient();
+  const queryClient = useQueryClient();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -83,7 +83,7 @@ function UserButton({ className }: UserButtonProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            querClient.clear()
+            queryClient.clear()
             logout();
           }}
         >
