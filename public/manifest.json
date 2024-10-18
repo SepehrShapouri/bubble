@@ -4,6 +4,7 @@
   "background_color": "#000000",
   "short_name": "bubble",
   "id": "bubble",
+  "display": "standalone",
   "description": "Bubble - your go to platform to share moments and thoughts.",
   "categories": ["entertainment", "social"],
   "offline_page":"/offline",
