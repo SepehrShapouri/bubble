@@ -1,17 +1,16 @@
 "use client";
-import { getAllBookmarks } from "@/components/bookmarks/actions";
 import InfiniteScrollContainer from "@/components/InfiniteScrollContainer";
-import Post from "@/components/posts/Post";
 import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
-import { NotificationsPage, PostsPage } from "@/lib/types";
+import api from "@/lib/ky";
+import { NotificationsPage } from "@/lib/types";
 import {
   useInfiniteQuery,
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { getNotifications, markNotificationsAsRead } from "./actions";
-import Notification from "./Notification";
 import { useEffect } from "react";
+import { markNotificationsAsRead } from "./actions";
+import Notification from "./Notification";
 
 function Notifications() {
   const {
@@ -21,18 +20,22 @@ function Notifications() {
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery<NotificationsPage>({
+  } = useInfiniteQuery({
     queryKey: ["notifications"],
-    queryFn: async ({ pageParam }) =>
-      //@ts-ignore
-      await getNotifications(pageParam),
+    queryFn: ({ pageParam }) =>
+      api
+        .get(
+          "/api/notifications",
+          pageParam ? { searchParams: { cursor: pageParam } } : {},
+        )
+        .json<NotificationsPage>(),
     initialPageParam: null as string | null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
 
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationFn: markNotificationsAsRead,
+    mutationFn: () => api.patch("api/notifications/mark-as-read"),
     onSuccess: () => {
       queryClient.setQueryData(["unread-notification-count"], {
         unreadCount: 0,

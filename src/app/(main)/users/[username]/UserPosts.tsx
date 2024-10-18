@@ -6,6 +6,7 @@ import PostsLoadingSkeleton from "@/components/posts/PostsLoadingSkeleton";
 import { PostsPage } from "@/lib/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getUsersPost } from "../actions";
+import api from "@/lib/ky";
 type UserPostsProps = {
   userId: string;
 };
@@ -17,11 +18,16 @@ function UserPosts({ userId }: UserPostsProps) {
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery<PostsPage>({
+  } = useInfiniteQuery({
     queryKey: ["post-feed", "user-posts", userId],
-    queryFn: async ({ pageParam }) =>
-      //@ts-ignore
-      await getUsersPost(userId,pageParam),
+    queryFn: ({ pageParam }) =>
+      api
+        .get(
+          `/api/users/${userId}/posts`,
+          pageParam ? { searchParams: { cursor: pageParam } } : {},
+        )
+        .json<PostsPage>(),
+
     initialPageParam: null as string | null,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
@@ -30,11 +36,7 @@ function UserPosts({ userId }: UserPostsProps) {
     return <PostsLoadingSkeleton />;
   }
   if (status === "success" && !posts.length && !hasNextPage) {
-    return (
-      <p className="text-center text-muted-foreground">
-        No posts found.
-      </p>
-    );
+    return <p className="text-center text-muted-foreground">No posts found.</p>;
   }
   if (status === "error") {
     return (

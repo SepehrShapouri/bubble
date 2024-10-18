@@ -11,14 +11,21 @@ import { useToast } from "./ui/use-toast";
 import { QueryKey, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import { followUser, unFollowUser } from "./users/actions";
+import api from "@/lib/ky";
 
 function FollowButton({ userId, initialState }: FollowButtonProps) {
   const { data } = useFollowerInfo(userId, initialState);
+
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
   const queryKey: QueryKey = ["follower-info", userId];
+
   const { mutate: changeFollowState, isPending } = useMutation({
-    mutationFn: data.isFollowedByUser ? unFollowUser : followUser,
+    mutationFn: () =>
+      data.isFollowedByUser
+        ? api.delete(`/api/users/${userId}/followers`)
+        : api.post(`/api/users/${userId}/followers`),
 
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
@@ -45,9 +52,7 @@ function FollowButton({ userId, initialState }: FollowButtonProps) {
   return (
     <Button
       variant={data.isFollowedByUser ? "secondary" : "default"}
-      onClick={() =>
-        changeFollowState(userId)
-      }
+      onClick={() => changeFollowState()}
     >
       {data.isFollowedByUser ? "Following" : "Follow"}
     </Button>

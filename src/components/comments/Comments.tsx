@@ -1,10 +1,10 @@
+import api from "@/lib/ky";
 import { CommentPage, PostData } from "@/lib/types";
-import CommentInput from "./CommentInput";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getPostComments } from "./actions";
-import { Comment } from "./Comment";
-import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
+import { Button } from "../ui/button";
+import { Comment } from "./Comment";
+import CommentInput from "./CommentInput";
 
 type CommentsProps = {
   post: PostData;
@@ -12,10 +12,15 @@ type CommentsProps = {
 
 function Comments({ post }: CommentsProps) {
   const { data, fetchNextPage, hasNextPage, isFetching, status } =
-    useInfiniteQuery<CommentPage>({
+    useInfiniteQuery({
       queryKey: ["comments", post.id],
       queryFn: ({ pageParam }) =>
-        getPostComments({ postId: post.id, cursor: pageParam as string }),
+        api
+          .get(
+            `/api/posts/${post.id}/comments`,
+            pageParam ? { searchParams: { cursor: pageParam } } : {},
+          )
+          .json<CommentPage>(),
       initialPageParam: null as string | null,
       getNextPageParam: (firstPage) => firstPage.previousCursor,
       select: (data) => ({

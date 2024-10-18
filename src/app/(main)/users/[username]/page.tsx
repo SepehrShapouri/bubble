@@ -1,8 +1,8 @@
 import { validateRequest } from "@/auth";
 import FollowButton from "@/components/FollowButton";
+import Linkify from "@/components/Linkify";
 import TrendsSidebar from "@/components/main/TrendsSidebar";
 import UserAvatar from "@/components/main/UserAvatar";
-import { Button } from "@/components/ui/button";
 import FollowerCount from "@/components/users/FollowerCount";
 import { db } from "@/lib/db";
 import { FollowerInfo, getUserDataSelect, UserData } from "@/lib/types";
@@ -11,9 +11,8 @@ import { formatDate } from "date-fns";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { cache } from "react";
-import UserPosts from "./UserPosts";
-import Linkify from "@/components/Linkify";
 import EditProfileButton from "./EditProfileButton";
+import UserPosts from "./UserPosts";
 
 type PageProps = {
   params: { username: string };

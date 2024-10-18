@@ -1,4 +1,5 @@
 import { getFollowers } from "@/components/users/actions";
+import api from "@/lib/ky";
 import { FollowerInfo } from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 
@@ -8,7 +9,8 @@ export default function useFollowerInfo(
 ) {
   const { data, isLoading } = useQuery({
     queryKey: ["follower-info", userId],
-    queryFn: async () => await getFollowers(userId),
+    queryFn: () =>
+      api.get(`/api/users/${userId}/followers`).json<FollowerInfo>(),
     initialData: initialState,
     staleTime: Infinity,
   });

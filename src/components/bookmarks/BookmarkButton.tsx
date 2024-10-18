@@ -11,6 +11,7 @@ import {
 import { Bookmark, Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { addBookmark, deleteBookmark, getBookmark } from "./actions";
+import api from "@/lib/ky";
 type BookmarkButtonProps = {
   postId: string;
   initialState: BookmarkInfo;
@@ -19,22 +20,23 @@ function BookmarkButton({ initialState, postId }: BookmarkButtonProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const queryKey: QueryKey = ["bookmark-info", postId];
-  const { data, isLoading: isLikesLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: queryKey,
-    queryFn: () => getBookmark(postId),
+    queryFn: () =>
+      api.get(`/api/posts/${postId}/bookmark`).json<BookmarkInfo>(),
     initialData: initialState,
     staleTime: Infinity,
   });
 
   const { mutate } = useMutation({
     mutationFn: () =>
-      data.isBookmarkedByUser ? deleteBookmark(postId) : addBookmark(postId),
+      data.isBookmarkedByUser
+        ? api.delete(`/api/posts/${postId}/bookmark`)
+        : api.post(`/api/posts/${postId}/bookmark`),
     onMutate: async () => {
-
-
-        toast({
-            description:`Post ${data.isBookmarkedByUser ? "un" : ""}bookmarked`
-        })
+      toast({
+        description: `Post ${data.isBookmarkedByUser ? "un" : ""}bookmarked`,
+      });
       await queryClient.cancelQueries({ queryKey });
       const previousState = queryClient.getQueryData<BookmarkInfo>(queryKey);
 
@@ -65,4 +67,4 @@ function BookmarkButton({ initialState, postId }: BookmarkButtonProps) {
   );
 }
 
-export default BookmarkButton
+export default BookmarkButton;

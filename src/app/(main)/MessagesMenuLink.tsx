@@ -1,5 +1,6 @@
 "use client";
 import { buttonVariants } from "@/components/ui/button";
+import api from "@/lib/ky";
 import { MessageCountInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -13,12 +14,9 @@ type MessagesMenuLinkProps = {
 function MessagesMenuLink({ initialState }: MessagesMenuLinkProps) {
   const { data } = useQuery({
     queryKey: ["unread-messages-count"],
-    queryFn: async (): Promise<number> => {
-      const response = await fetch("/api/messages/unread-count");
-      const data: MessageCountInfo = await response.json();
-      return data.unreadCount;
-    },
-    initialData: initialState.unreadCount,
+    queryFn: () =>
+      api.get("/api/messages/unread-count").json<MessageCountInfo>(),
+    initialData: initialState,
     refetchInterval: 60 * 1000,
   });
   return (
@@ -34,9 +32,9 @@ function MessagesMenuLink({ initialState }: MessagesMenuLinkProps) {
       {" "}
       <div className="relative">
         <Mail />
-        {!!data && (
+        {!!data && data.unreadCount > 0 && (
           <span className="absolute shrink-0 size-4 -right-1 -top-1 rounded-full bg-primary text-white flex items-center justify-center text-[10px] font-medium tabular-nums">
-            {data}
+            {data.unreadCount}
           </span>
         )}
       </div>

@@ -1,15 +1,14 @@
+import api from "@/lib/ky";
 import { LikeInfo } from "@/lib/types";
-import React from "react";
-import { useToast } from "../ui/use-toast";
+import { cn, formatNumber } from "@/lib/utils";
 import {
   QueryKey,
   useMutation,
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { deleteLike, getPostLikes, likePost } from "./actions";
 import { Heart } from "lucide-react";
-import { cn, formatNumber } from "@/lib/utils";
+import { useToast } from "../ui/use-toast";
 type LikeButtonProps = {
   postId: string;
   initialState: LikeInfo;
@@ -20,14 +19,16 @@ function LikeButton({ initialState, postId }: LikeButtonProps) {
   const queryKey: QueryKey = ["like-info", postId];
   const { data: likes, isLoading: isLikesLoading } = useQuery({
     queryKey: queryKey,
-    queryFn: () => getPostLikes(postId),
+    queryFn: () => api.get(`/api/posts/${postId}/likes`).json<LikeInfo>(),
     initialData: initialState,
     staleTime: Infinity,
   });
 
   const { mutate } = useMutation({
     mutationFn: () =>
-      likes.isLikedByUser ? deleteLike(postId) : likePost(postId),
+      likes.isLikedByUser
+        ? api.delete(`/api/posts/${postId}/likes`)
+        : api.post(`/api/posts/${postId}/likes`),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey });
       const previousState = queryClient.getQueryData<LikeInfo>(queryKey);

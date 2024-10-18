@@ -7,13 +7,15 @@ import { Bell } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { getUnreadNotifCount } from "./notifications/actions";
+import api from "@/lib/ky";
 type NotificationsMenuLinkProps = {
   initialState: NotificationCountInfo;
 };
 function NotificationsMenuLink({ initialState }: NotificationsMenuLinkProps) {
   const { data } = useQuery({
     queryKey: ["unread-notification-count"],
-    queryFn: getUnreadNotifCount,
+    queryFn: () =>
+      api.get("/api/notifications/unread-count").json<NotificationCountInfo>(),
     initialData: initialState,
     refetchInterval: 60 * 1000,
   });

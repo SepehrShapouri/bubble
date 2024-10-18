@@ -8,6 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import useDebounce from "@/hooks/useDebounce";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -23,7 +25,7 @@ type NewChatDialogProps = {
 
 function NewChatDialog({ onChatCreated, onOpenChange }: NewChatDialogProps) {
   const { client, setActiveChannel } = useChatContext();
-
+  const [groupName, setGroupName] = useState<string>("");
   const { toast } = useToast();
   const { user: loggedInUser } = useSession();
   if (!loggedInUser) throw Error("Unauthenticated");
@@ -56,16 +58,11 @@ function NewChatDialog({ onChatCreated, onOpenChange }: NewChatDialogProps) {
       ),
   });
 
-  const {mutate,isPending} = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       const channel = client.channel("messaging", {
         members: [loggedInUser.id, ...selectedUsers.map((u) => u.id)],
-        name:
-          selectedUsers.length > 1
-            ? loggedInUser.displayName +
-              ", " +
-              selectedUsers.map((u) => u.name).join(", ")
-            : undefined,
+        name: selectedUsers.length > 1 ? groupName : undefined,
       });
       await channel.create();
 
@@ -75,10 +72,13 @@ function NewChatDialog({ onChatCreated, onOpenChange }: NewChatDialogProps) {
       setActiveChannel(channel);
       onChatCreated();
     },
-    onError:(error)=>{
-    console.error("error starting a new chat",error)
-    toast({variant:"destructive",description:"Something went wrong, please try again"})
-    }
+    onError: (error) => {
+      console.error("error starting a new chat", error);
+      toast({
+        variant: "destructive",
+        description: "Something went wrong, please try again",
+      });
+    },
   });
   return (
     <Dialog open onOpenChange={onOpenChange}>
@@ -140,8 +140,26 @@ function NewChatDialog({ onChatCreated, onOpenChange }: NewChatDialogProps) {
             )}
           </div>
         </div>
-        <DialogFooter className="px-6 pb-6">
-            <Button disabled={!selectedUsers.length || isPending} isLoading={isPending} loadingText="Starting chat" onClick={()=>mutate()}>Start chat</Button>
+        <DialogFooter className="px-6 pb-6  flex flex-col gap-2 md:flex-col !space-x-0">
+          {selectedUsers.length >= 2 && (
+            <div className="flex flex-col gap-2">
+              <Label>Group name</Label>
+              <Input
+                placeholder="The bois, or....gyals?"
+                value={groupName}
+                onChange={(e) => setGroupName(e.target.value)}
+              />
+            </div>
+          )}
+          <Button
+            disabled={!selectedUsers.length || isPending}
+            isLoading={isPending}
+            loadingText="Starting chat"
+            className="w-full"
+            onClick={() => mutate()}
+          >
+            Start chat
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
