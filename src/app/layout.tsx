@@ -32,6 +32,12 @@ export const metadata: Metadata = {
     icon: "/ios/192.png",
     apple: "/ios/180.png",
   },
+  twitter:{
+    card: "summary_large_image",
+    title:"bubble",
+    description : "your daily go to social network",
+    images: ['/thumbnail.jpg'],
+  }
 };
 export const viewport: Viewport = {
   themeColor: "#2563eb",
