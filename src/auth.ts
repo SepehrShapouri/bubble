@@ -3,6 +3,7 @@ import { db } from "./lib/db";
 import { Lucia, Session, User } from "lucia";
 import { cache } from "react";
 import { cookies } from "next/headers";
+import { Google } from "arctic";
 const adapter = new PrismaAdapter(db.session, db.user);
 
 export const lucia = new Lucia(adapter, {
@@ -36,7 +37,11 @@ type DatabaseUserAttributes = {
   avatarUrl?: string;
   googleId?: string;
 };
-
+export const google = new Google(
+  process.env.GOOGLE_CLIENT_ID!,
+  process.env.GOOGLE_CLIENT_SECRET!,
+  `https://bubble-delta-two.vercel.app/api/auth/callback/google`,
+);
 export const validateRequest = cache(
   async (): Promise<
     { user: User; session: Session } | { user: null; session: null }

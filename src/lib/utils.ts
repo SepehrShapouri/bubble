@@ -26,3 +26,8 @@ export function formatNumber(number: number): string {
     maximumFractionDigits: 1,
   }).format(number)
 }
+
+
+export function sluggify(input:string):string{
+  return input.toLocaleLowerCase().replace(/ /g,"-").replace(/[^a-z0-9-]/g,"")
+}

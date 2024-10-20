@@ -10,6 +10,7 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { login, signUp } from "./actions";
+import GoogleAuthButton from "./GoogleAuthButton";
 type AuthFormTypes = { formType: "signup" | "login" };
 function AuthForm({ formType }: AuthFormTypes) {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -94,11 +95,12 @@ function AuthForm({ formType }: AuthFormTypes) {
                 >
                   {formType == "login" ? "Login" : "Create account"}
                 </Button>
-                <Button variant="outline" className="w-full">
+                {/* <Button variant="outline" className="w-full">
                   {formType == "login"
                     ? "Login with Google"
                     : "Sign up with Google"}
-                </Button>
+                </Button> */}
+                <GoogleAuthButton/>
               </form>
             </Form>
           </div>

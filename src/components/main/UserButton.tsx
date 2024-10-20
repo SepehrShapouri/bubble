@@ -48,7 +48,7 @@ function UserButton({ className }: UserButtonProps) {
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="mx-4 sm:mx-0">
-        <DropdownMenuLabel className="text-zinc-900/70 dark:text-zinc-400">
+        <DropdownMenuLabel className="text-zinc-900/70 max-w-[200px] dark:text-zinc-400 line-clamp-2">
           Logged in as @{user.username}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
