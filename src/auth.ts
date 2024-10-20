@@ -40,7 +40,7 @@ type DatabaseUserAttributes = {
 export const google = new Google(
   process.env.GOOGLE_CLIENT_ID!,
   process.env.GOOGLE_CLIENT_SECRET!,
-  `https://bubble-media/api/auth/callback/google`,
+  `https://bubble-media.vercel.app/api/auth/callback/google`,
 );
 export const validateRequest = cache(
   async (): Promise<
