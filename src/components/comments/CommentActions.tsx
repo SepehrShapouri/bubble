@@ -20,7 +20,7 @@ function CommentActions({ comment, className }: CommentActionsProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button size="icon" variant="ghost" className={className}>
             <MoreHorizontal className="size-5 text-muted-foreground" />

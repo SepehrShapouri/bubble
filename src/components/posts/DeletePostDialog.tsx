@@ -1,6 +1,5 @@
 import { PostData } from "@/lib/types";
-import React from "react";
-import { useDeletePost } from "./mutations";
+import { Button } from "../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../ui/dialog";
-import { Button } from "../ui/button";
+import { useDeletePost } from "./mutations";
 type DeletePostDialogProps = {
   post: PostData;
   open: boolean;
@@ -23,7 +22,7 @@ function DeletePostDialog({ post, open, onClose }: DeletePostDialogProps) {
     }
   }
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete post?</DialogTitle>
@@ -32,7 +31,7 @@ function DeletePostDialog({ post, open, onClose }: DeletePostDialogProps) {
             undone.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter className="flex flex-col gap-2 md:flex-row">
           <Button variant="secondary" onClick={onClose} disabled={isDeleting}>
             Never mind
           </Button>

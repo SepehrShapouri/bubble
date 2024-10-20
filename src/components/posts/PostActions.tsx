@@ -20,7 +20,7 @@ function PostActions({ post, className }: PostActionsProps) {
   const [showDeleteDialog, setShowDeleteDialog] = useState<boolean>(false);
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button size="icon" variant="ghost" className={className}>
             <MoreHorizontal className="size-5 text-muted-foreground" />
@@ -38,7 +38,9 @@ function PostActions({ post, className }: PostActionsProps) {
       <DeletePostDialog
         post={post}
         open={showDeleteDialog}
-        onClose={() => setShowDeleteDialog(false)}
+        onClose={() => {
+          setShowDeleteDialog(false);
+        }}
       />
     </>
   );

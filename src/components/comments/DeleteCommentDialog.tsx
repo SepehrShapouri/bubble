@@ -35,7 +35,7 @@ function DeleteCommentDialog({
             undone.
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
+        <DialogFooter className="flex flex-col gap-2 md:flex-row">
           <Button variant="secondary" onClick={onClose} disabled={isDeleting}>
             Never mind
           </Button>
