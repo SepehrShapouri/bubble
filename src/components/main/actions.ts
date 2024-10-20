@@ -89,7 +89,7 @@ export const getTrendingTopics = unstable_cache(
       count: Number(row.count),
     }));
   },
-  ["trending_topics"],
+  ["trending"],
   {
     revalidate: 3 * 60 * 60,
   },
