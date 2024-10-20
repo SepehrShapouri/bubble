@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     title:"bubble",
     description : "your daily go to social network",
     images: ['/thumbnail.jpg'],
-  }
+  },    metadataBase: new URL("https://bubble-media.vercel.app"),
 };
 export const viewport: Viewport = {
   themeColor: "#2563eb",
