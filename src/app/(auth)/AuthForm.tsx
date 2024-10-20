@@ -72,13 +72,13 @@ function AuthForm({ formType }: AuthFormTypes) {
                 )}
                 <CustomInput
                   control={form.control}
-                  placeholder="nastyPickle"
+                  placeholder="bubble-guy"
                   name="username"
                   label="Username"
                 />
                 <CustomInput
                   control={form.control}
-                  placeholder="StrongPassHehe***"
+                  placeholder="somehting strong..."
                   name="password"
                   label="Password"
                   showPassword={showPassword}
