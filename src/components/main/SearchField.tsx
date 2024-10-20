@@ -11,7 +11,7 @@ function SearchField() {
     const form = e.currentTarget;
     const query = (form.query as HTMLInputElement).value.trim();
     if (!query) return;
-    router.push(`/search?query=${encodeURIComponent(query)}`)
+    router.push(`/search?q=${encodeURIComponent(query)}`)
   }
   return (
     <form onSubmit={handleSubmit} method="get" action="/search">
