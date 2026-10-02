@@ -1,0 +1,24 @@
+{
+  "default_branch": "master",
+  "branches": [
+    "SepehrShapouri-patch-1",
+    "SepehrShapouri-patch-2",
+    "master",
+    "origin",
+    "test-cm"
+  ],
+  "parent": {
+    "SepehrShapouri-patch-1": "master",
+    "SepehrShapouri-patch-2": "master",
+    "master": null,
+    "origin": "master",
+    "test-cm": "master"
+  },
+  "order": [
+    "master",
+    "SepehrShapouri-patch-1",
+    "SepehrShapouri-patch-2",
+    "origin",
+    "test-cm"
+  ]
+}
